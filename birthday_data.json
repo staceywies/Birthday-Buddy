@@ -1,0 +1,11 @@
+[
+  {"name": "Avery", "birthday": "1994-07-15","status": "bestie"},
+  {"name": "Nikki", "birthday": "1994-07-15","status": "bestie"},
+  {"name": "Emily", "birthday": "1994-07-15","status": "bestie"},
+  {"name": "Kelley Gremillion", "birthday": "1994-07-15","status": "bestie"},
+  {"name": "Rachel Bower", "birthday": "1994-07-15","status": "close"},
+  {"name": "Scarlett", "birthday": "1994-07-15","status": "friend"},
+  {"name": "Kristen", "birthday": "1994-07-15","status": "friend"},
+  {"name": "Mom", "birthday": "1994-07-15","status": "close"},
+  {"name": "Dad", "birthday": "1994-07-15","status": "close"}
+]

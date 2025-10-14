@@ -1,0 +1,28 @@
+import json
+import smtplib
+from datetime import datetime
+from email.mime.text import MIMEText
+
+# Load birthdays
+with open('birthdays.json') as f:
+    friends = json.load(f)
+
+today = datetime.today()
+
+# Check birthdays
+for friend in friends:
+    bday = datetime.strptime(friend['birthday'], "%Y-%m-%d")
+    if bday.day == today.day and bday.month == today.month:
+        # Prepare email
+        msg = MIMEText(f"Reminder: Today is {friend['name']}'s birthday! 🎉")
+        msg['Subject'] = f"Birthday Reminder: {friend['name']}"
+        msg['From'] = "youremail@gmail.com"
+        msg['To'] = "youremail@gmail.com"  # or send to friend['email']
+
+        # Send email
+        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+            server.starttls()
+            server.login("youremail@gmail.com", "YOUR_APP_PASSWORD")
+            server.send_message(msg)
+
+print("Birthday check complete!")
