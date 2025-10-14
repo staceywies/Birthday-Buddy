@@ -3,26 +3,45 @@ import smtplib
 from datetime import datetime
 from email.mime.text import MIMEText
 
-# Load birthdays
+# --- Config ---
+YOUR_EMAIL = "youremail@gmail.com"
+APP_PASSWORD = "YOUR_APP_PASSWORD"  # Gmail App Password
+SEND_TO_FRIEND = False  # True to email your friends, False to just notify yourself
+
+# --- Load birthdays ---
 with open('birthdays.json') as f:
     friends = json.load(f)
 
 today = datetime.today()
+birthdays_today = []
 
-# Check birthdays
+# --- Check birthdays ---
 for friend in friends:
     bday = datetime.strptime(friend['birthday'], "%Y-%m-%d")
     if bday.day == today.day and bday.month == today.month:
+        birthdays_today.append(friend['name'])
         # Prepare email
+        if SEND_TO_FRIEND:
+            recipient = friend['email']
+        else:
+            recipient = YOUR_EMAIL
+
         msg = MIMEText(f"Reminder: Today is {friend['name']}'s birthday! 🎉")
         msg['Subject'] = f"Birthday Reminder: {friend['name']}"
-        msg['From'] = "youremail@gmail.com"
-        msg['To'] = "youremail@gmail.com"  # or send to friend['email']
+        msg['From'] = YOUR_EMAIL
+        msg['To'] = recipient
 
         # Send email
         with smtplib.SMTP('smtp.gmail.com', 587) as server:
             server.starttls()
-            server.login("youremail@gmail.com", "YOUR_APP_PASSWORD")
+            server.login(YOUR_EMAIL, APP_PASSWORD)
             server.send_message(msg)
 
-print("Birthday check complete!")
+# --- Write to log ---
+with open("log.txt", "a") as log_file:
+    if birthdays_today:
+        log_file.write(f"{datetime.now()}: Sent emails for {', '.join(birthdays_today)}\n")
+    else:
+        log_file.write(f"{datetime.now()}: Checked birthdays. None today.\n")
+
+print("Birthday check complete! 🎉")
