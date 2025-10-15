@@ -1,47 +1,74 @@
+# pip install requests python-dotenv
+import os
 import json
-import smtplib
-from datetime import datetime
-from email.mime.text import MIMEText
+from datetime import date, datetime
+import requests
+from dotenv import load_dotenv
 
-# --- Config ---
-YOUR_EMAIL = "youremail@gmail.com"
-APP_PASSWORD = "YOUR_APP_PASSWORD"  # Gmail App Password
-SEND_TO_FRIEND = False  # True to email your friends, False to just notify yourself
+load_dotenv()
 
-# --- Load birthdays ---
-with open('birthdays.json') as f:
+def days_until_birthday(birthday_str):
+    today = date.today()
+    bday = datetime.strptime(birthday_str, "%m-%d").date().replace(year=today.year)
+    if bday < today:
+        bday = bday.replace(year=today.year + 1)
+    return (bday - today).days
+
+def should_remind(days_left, closeness):
+    if days_left == 0:
+        return True
+    if closeness == "close" and days_left in [30, 7,0]:
+        return True
+    if closeness == "medium" and days_left in [7,0]:
+        return True
+    return False
+
+def make_message(name, days_left):
+    if days_left == 0:
+        return f"🎂 It's {name}'s birthday today!"
+    elif days_left == 7:
+        return f"📅 {name}'s birthday is in 1 week."
+    elif days_left == 30:
+        return f"🗓️ {name}'s birthday is in 1 month."
+    return None
+
+def send_email(message):
+    url = "https://api.brevo.com/v3/smtp/email"
+    payload = {
+        "sender": {"name": "Birthday Bot", "email": os.getenv("FROM_EMAIL")},
+        "to": [{"email": os.getenv("TO_EMAIL")}],
+        "subject": "🎉 Birthday Reminder",
+        "textContent": message
+    }
+    headers = {
+        "accept": "application/json",
+        "content-type": "application/json",
+        "api-key": os.getenv("BREVO_API_KEY")
+    }
+    try:
+        response = requests.post(url, json=payload, headers=headers)
+        print("Email sent:", response.status_code, response.text)
+    except Exception as e:
+        print("Error sending email:", e)
+
+# Load friend list
+with open("friends.json", "r") as f:
     friends = json.load(f)
 
-today = datetime.today()
-birthdays_today = []
-
-# --- Check birthdays ---
+messages = []
 for friend in friends:
-    bday = datetime.strptime(friend['birthday'], "%Y-%m-%d")
-    if bday.day == today.day and bday.month == today.month:
-        birthdays_today.append(friend['name'])
-        # Prepare email
-        if SEND_TO_FRIEND:
-            recipient = friend['email']
-        else:
-            recipient = YOUR_EMAIL
+    days_left = days_until_birthday(friend["birthday"])
+    if should_remind(days_left, friend["closeness"]):
+        msg = make_message(friend["name"], days_left)
+        if msg:
+            messages.append(msg)
 
-        msg = MIMEText(f"Reminder: Today is {friend['name']}'s birthday! 🎉")
-        msg['Subject'] = f"Birthday Reminder: {friend['name']}"
-        msg['From'] = YOUR_EMAIL
-        msg['To'] = recipient
+if messages:
+    combined_message = "\n".join(messages)
+    send_email(combined_message)
+else:
+    print("No birthdays to remind today.")
 
-        # Send email
-        with smtplib.SMTP('smtp.gmail.com', 587) as server:
-            server.starttls()
-            server.login(YOUR_EMAIL, APP_PASSWORD)
-            server.send_message(msg)
-
-# --- Write to log ---
-with open("log.txt", "a") as log_file:
-    if birthdays_today:
-        log_file.write(f"{datetime.now()}: Sent emails for {', '.join(birthdays_today)}\n")
-    else:
-        log_file.write(f"{datetime.now()}: Checked birthdays. None today.\n")
-
-print("Birthday check complete! 🎉")
+# Optional: log the run
+with open("log.txt", "a") as log:
+    log.write(f"{date.today()} - {'; '.join(messages) if messages else 'No reminders today'}\n")
