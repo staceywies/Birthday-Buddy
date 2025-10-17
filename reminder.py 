@@ -17,9 +17,9 @@ def days_until_birthday(birthday_str):
 def should_remind(days_left, closeness):
     if days_left == 0:
         return True
-    if closeness == "close" and days_left in [30, 7,0]:
+    if closeness == "bestie" and days_left in [30, 7,0]:
         return True
-    if closeness == "medium" and days_left in [7,0]:
+    if closeness == "close" and days_left in [7,0]:
         return True
     return False
 
