@@ -37,7 +37,7 @@ def send_email(message):
     payload = {
         "sender": {"name": "Birthday Bot", "email": os.getenv("FROM_EMAIL")},
         "to": [{"email": os.getenv("TO_EMAIL")}],
-        "subject": "🎉 Birthday Reminder",
+        "subject": "🎉 Birthday Reminder" + {name},
         "textContent": message
     }
     headers = {
