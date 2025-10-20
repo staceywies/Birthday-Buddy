@@ -14,12 +14,12 @@ def days_until_birthday(birthday_str):
         bday = bday.replace(year=today.year + 1)
     return (bday - today).days
 
-def should_remind(days_left, closeness):
+def should_remind(days_left, status):
     if days_left == 0:
         return True
-    if closeness == "bestie" and days_left in [30, 7,0]:
+    if status == "bestie" and days_left in [30, 7,0]:
         return True
-    if closeness == "close" and days_left in [7,0]:
+    if status == "close" and days_left in [7,0]:
         return True
     return False
 
@@ -58,7 +58,7 @@ with open("friends.json", "r") as f:
 messages = []
 for friend in friends:
     days_left = days_until_birthday(friend["birthday"])
-    if should_remind(days_left, friend["closeness"]):
+    if should_remind(days_left, friend["status"]):
         msg = make_message(friend["name"], days_left)
         if msg:
             messages.append(msg)
