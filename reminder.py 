@@ -52,7 +52,7 @@ def send_email(message):
         print("Error sending email:", e)
 
 # Load friend list
-with open("friends.json", "r") as f:
+with open("birthday_data_test.json", "r") as f:
     friends = json.load(f)
 
 messages = []
