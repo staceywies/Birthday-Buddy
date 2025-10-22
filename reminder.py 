@@ -29,7 +29,7 @@ def make_message(name, days_left):
     elif days_left == 7:
         return f"📅 {name}'s birthday is in 1 week."
     elif days_left == 30:
-        return f"🗓️ {name}'s birthday is in 1 month."
+        return f"🗓️ {name}'s birthday is in 30 days. It's on {bday}."
     return None
 
 def send_email(message):
@@ -54,7 +54,7 @@ def send_email(message):
 # Load friend list
 with open("birthday_data_test.json", "r") as f:
     friends = json.load(f)
-
+t
 messages = []
 for friend in friends:
     days_left = days_until_birthday(friend["birthday"])
