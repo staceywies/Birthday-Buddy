@@ -23,11 +23,11 @@ def should_remind(days_left, status):
         return True
     return False
 
-def make_message(name, days_left):
+def make_message(name, days_left, bday):
     if days_left == 0:
-        return f"🎂 It's {name}'s birthday today!"
+        return f"🎂 It's {name}'s birthday today! It's on {bday}."
     elif days_left == 7:
-        return f"📅 {name}'s birthday is in 1 week."
+        return f"📅 {name}'s birthday is in 1 week. It's on {bday}."
     elif days_left == 30:
         return f"🗓️ {name}'s birthday is in 30 days. It's on {bday}."
     return None
@@ -59,7 +59,7 @@ messages = []
 for friend in friends:
     days_left = days_until_birthday(friend["birthday"])
     if should_remind(days_left, friend["status"]):
-        msg = make_message(friend["name"], days_left)
+        msg = make_message(friend["name"], days_left, friend["bday"])
         if msg:
             messages.append(msg)
 
