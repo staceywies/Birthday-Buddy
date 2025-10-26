@@ -54,7 +54,7 @@ def send_email(message):
 # Load friend list
 with open("birthday_data_test.json", "r") as f:
     friends = json.load(f)
-t
+
 messages = []
 for friend in friends:
     days_left = days_until_birthday(friend["birthday"])
