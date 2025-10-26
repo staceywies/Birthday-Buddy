@@ -37,7 +37,7 @@ def send_email(message):
     payload = {
         "sender": {"name": "Birthday Bot", "email": os.getenv("FROM_EMAIL")},
         "to": [{"email": os.getenv("TO_EMAIL")}],
-        "subject": "🎉 Birthday Reminder" + {name},
+        "subject": "🎉 Birthday Reminder: " + ", ".join([friend["name"] for friend in friends]),
         "textContent": message
     }
     headers = {
@@ -59,7 +59,7 @@ messages = []
 for friend in friends:
     days_left = days_until_birthday(friend["birthday"])
     if should_remind(days_left, friend["status"]):
-        msg = make_message(friend["name"], days_left, friend["bday"])
+        msg = make_message(friend["name"], days_left, friend["birthday"])
         if msg:
             messages.append(msg)
 
