@@ -2,7 +2,7 @@ name: Birthday Reminder
 
 on:
   schedule:
-    - cron: "0 12 * * *"  # every day at 5 AM PT
+    - cron: "0 12 * * *"  # 12:00 UTC = 5 AM PT
   workflow_dispatch:       # allows manual run from GitHub
 
 jobs:
@@ -10,23 +10,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Checkout repo
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: List repo files
-        run: ls -R
-
-
-
+      # 2️⃣ Set up Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.x"
 
+      # 3️⃣ Install dependencies
       - name: Install dependencies
-        run: |
-          pip install requests python-dotenv
+        run: pip install requests python-dotenv
 
+      # 4️⃣ Run reminder script
       - name: Run reminder script
         working-directory: ${{ github.workspace }}
         env:
@@ -35,3 +33,13 @@ jobs:
           FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
           BIRTHDAY_DATA: ${{ secrets.BIRTHDAY_DATA }}
         run: python reminder.py
+
+      # 5️⃣ Commit log.txt updates (if any)
+      - name: Commit updated log.txt
+        working-directory: ${{ github.workspace }}
+        run: |
+          git config --local user.name "Birthday Bot"
+          git config --local user.email "birthday-bot@example.com"
+          git add log.txt
+          git diff --quiet && echo "No changes to commit" || git commit -m "Update birthday log"
+          git push origin main
