@@ -37,7 +37,7 @@ def send_email(message):
     payload = {
         "sender": {"name": "Birthday Bot", "email": os.getenv("FROM_EMAIL")},
         "to": [{"email": os.getenv("TO_EMAIL")}],
-        "subject": "🎉 Birthday Reminder: " + ", ".join([friend["name"] for friend in friends]),
+        "subject": "🎉 Birthday Reminder",
         "textContent": message
     }
     headers = {
@@ -45,11 +45,25 @@ def send_email(message):
         "content-type": "application/json",
         "api-key": os.getenv("BREVO_API_KEY")
     }
+
     try:
         response = requests.post(url, json=payload, headers=headers)
-        print("Email sent:", response.status_code, response.text)
-    except Exception as e:
-        print("Error sending email:", e)
+
+        if response.status_code == 201:
+            print("✅ Email successfully sent via Brevo!")
+        elif response.status_code == 400:
+            print("⚠️ Bad request — check your payload or FROM_EMAIL format.")
+            print(response.text)
+        elif response.status_code == 401:
+            print("🚫 Unauthorized — your API key may be invalid or expired.")
+        elif response.status_code == 429:
+            print("⏳ Rate limited — too many requests, try again later.")
+        else:
+            print(f"❌ Unexpected error ({response.status_code}): {response.text}")
+
+    except requests.exceptions.RequestException as e:
+        print("💥 Network error trying to send email:", e)
+
 
 # Load friend list
 import ast
