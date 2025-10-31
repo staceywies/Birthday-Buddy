@@ -1,0 +1,15 @@
+[
+  {"name": "Avery Lio", "birthday": "04-25","status": "bestie"},
+  {"name": "Nikki Koehler", "birthday": "01-17","status": "bestie"},
+  {"name": "Emily Roncase", "birthday": "10-01","status": "bestie"},
+  {"name": "Kelley Gremillion", "birthday": "12-29","status": "bestie"},
+  {"name": "Rachel Bower", "birthday": "01-04","status": "close"},
+  {"name": "Sam Simone", "birthday": "08-31","status": "close"},
+  {"name": "Kristen Carter", "birthday": "10-26","status": "friend"},
+  {"name": "Hannah Haddad", "birthday": "08-23","status": "close"},
+  {"name": "Megan Shockey", "birthday": "06-30","status": "close"},
+  {"name": "Mom", "birthday": "01-24","status": "close"},
+  {"name": "Daniel Wieseneck", "birthday": "04-08","status": "close"},
+  {"name": "Amy Wieseneck", "birthday": "06-10","status": "close"},
+  {"name": "Dad", "birthday": "01-07","status": "close"}
+]
