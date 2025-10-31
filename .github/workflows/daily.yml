@@ -33,4 +33,4 @@ jobs:
           TO_EMAIL: ${{ secrets.TO_EMAIL }}
           FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
           BIRTHDAY_DATA: ${{ secrets.BIRTHDAY_DATA }}
-        run: python reminder.py
+        run: python Birthday-Buddy/reminder.py
