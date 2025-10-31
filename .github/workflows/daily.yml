@@ -13,6 +13,9 @@ jobs:
       # 1️⃣ Checkout repo
       - name: Checkout repo
         uses: actions/checkout@v3
+      
+      - name: Debug list repo files
+        run: ls -R ${{ github.workspace }}
 
       # 2️⃣ Set up Python
       - name: Set up Python
@@ -26,6 +29,7 @@ jobs:
 
       # 4️⃣ Run reminder script
       - name: Run reminder script
+        working-directory: ${{ github.workspace }}
         env:
           BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
           TO_EMAIL: ${{ secrets.TO_EMAIL }}
