@@ -32,13 +32,3 @@ jobs:
           FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
           BIRTHDAY_DATA: ${{ secrets.BIRTHDAY_DATA }}
         run: python reminder.py
-
-      # 5️⃣ Commit log.txt updates (if any)
-      - name: Commit updated log.txt
-        working-directory: ${{ github.workspace }}
-        run: |
-          git config --local user.name "Birthday Bot"
-          git config --local user.email "birthday-bot@example.com"
-          git add log.txt
-          git diff --quiet && echo "No changes to commit" || git commit -m "Update birthday log"
-          git push origin main
