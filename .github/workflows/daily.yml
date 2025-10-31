@@ -28,6 +28,7 @@ jobs:
           pip install requests python-dotenv
 
       - name: Run reminder script
+        working-directory: ${{ github.workspace }}
         env:
           BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
           TO_EMAIL: ${{ secrets.TO_EMAIL }}
