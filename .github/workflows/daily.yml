@@ -1,0 +1,31 @@
+name: Birthday Reminder
+
+on:
+  schedule:
+    - cron: "0 12 * * *"  # every day at 5 AM PT
+  workflow_dispatch:       # allows manual run from GitHub
+
+jobs:
+  send-reminders:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: |
+          pip install requests python-dotenv
+
+      - name: Run reminder script
+        env:
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+          TO_EMAIL: ${{ secrets.TO_EMAIL }}
+          FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
+          BIRTHDAY_DATA: ${{ secrets.BIRTHDAY_DATA }}
+        run: python reminder.py

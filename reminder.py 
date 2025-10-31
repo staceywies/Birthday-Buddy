@@ -52,8 +52,11 @@ def send_email(message):
         print("Error sending email:", e)
 
 # Load friend list
-with open("birthday_data_test.json", "r") as f:
-    friends = json.load(f)
+import ast
+
+# Load birthday data from environment secret
+birthday_data_str = os.getenv("BIRTHDAY_DATA")
+friends = json.loads(birthday_data_str)
 
 messages = []
 for friend in friends:
