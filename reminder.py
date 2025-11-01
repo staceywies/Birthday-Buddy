@@ -59,7 +59,7 @@ def send_email(message):
         elif response.status_code == 429:
             print("⏳ Rate limited — too many requests, try again later.")
         else:
-            print(f"❌ Unexpected error ({response.status_code}): {response.text}")
+            print(f"❌ Unexpected error ({response.status_code}): {response.text} ❌")
 
     except requests.exceptions.RequestException as e:
         print("💥 Network error trying to send email:", e)
