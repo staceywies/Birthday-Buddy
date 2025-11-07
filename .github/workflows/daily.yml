@@ -5,6 +5,10 @@ on:
     - cron: "0 12 * * *"  # Runs every day at 12:00 UTC (5 AM PT)
   workflow_dispatch:       # Allows manual triggering
 
+  permissions:
+    contents: write
+
+
 jobs:
   send-reminders:
     runs-on: ubuntu-latest
