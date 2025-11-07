@@ -2,32 +2,35 @@ name: Birthday Reminder
 
 on:
   schedule:
-    - cron: "0 12 * * *"  # 12:00 UTC = 5 AM PT
-  workflow_dispatch:       # allows manual run from GitHub
+    - cron: "0 12 * * *"  # Runs every day at 12:00 UTC (5 AM PT)
+  workflow_dispatch:       # Allows manual triggering
 
 jobs:
   send-reminders:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout repo
-      - name: Checkout repo
-        uses: actions/checkout@v3
-      
-      - name: Debug list repo files
+      # 1️⃣ Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false  # We'll set credentials manually for the commit
+
+      # 2️⃣ Debug: List repo files (optional)
+      - name: Debug - List repository files
         run: ls -R ${{ github.workspace }}
 
-      # 2️⃣ Set up Python
+      # 3️⃣ Set up Python
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.x"
 
-      # 3️⃣ Install dependencies
+      # 4️⃣ Install dependencies
       - name: Install dependencies
         run: pip install requests python-dotenv
 
-      # 4️⃣ Run reminder script
+      # 5️⃣ Run birthday reminder script
       - name: Run reminder script
         working-directory: ${{ github.workspace }}
         env:
@@ -36,3 +39,20 @@ jobs:
           FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
           BIRTHDAY_DATA: ${{ secrets.BIRTHDAY_DATA }}
         run: python reminder.py
+
+      # 6️⃣ Commit log updates if reminder script wrote to log.txt
+      - name: Commit log updates
+        if: success()  # Only runs if previous steps succeeded
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if [[ -f log.txt ]]; then
+            git add log.txt
+            git commit -m "📅 Update birthday log on $(date -u +"%Y-%m-%d %H:%M:%S") UTC" || echo "No log changes to commit"
+            git push
+          else
+            echo "No log.txt found — skipping commit."
+          fi
