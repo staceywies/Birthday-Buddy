@@ -22,7 +22,7 @@ def should_remind(days_left, status):
     if status == "close" and days_left in [7,0]:
         return True
     return False
-
+##Need to update to make one messagae insteaed of multiple
 def make_message(name, days_left, bday):
     if days_left == 0:
         return f"🎂 It's {name}'s birthday today! It's on {bday}."
@@ -68,6 +68,7 @@ def send_email(message):
 # Load friend list
 import ast
 
+##Need to update to work with basic data structure
 # Load birthday data from environment secret
 birthday_data_str = os.getenv("BIRTHDAY_DATA")
 friends = json.loads(birthday_data_str)
