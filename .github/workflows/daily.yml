@@ -40,19 +40,20 @@ jobs:
           BIRTHDAY_DATA: ${{ secrets.BIRTHDAY_DATA }}
         run: python reminder.py
 
-      # 6️⃣ Commit log updates if reminder script wrote to log.txt
+      # 6️⃣ Commit and push log updates
       - name: Commit log updates
-        if: success()  # Only runs if previous steps succeeded
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          if [[ -f log.txt ]]; then
+          if [ -f log.txt ]; then
             git add log.txt
             git commit -m "📅 Update birthday log on $(date -u +"%Y-%m-%d %H:%M:%S") UTC" || echo "No log changes to commit"
-            git push
+
+            # ✅ Use GITHUB_TOKEN for authentication when pushing
+            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:${{ github.ref }}
+
           else
             echo "No log.txt found — skipping commit."
           fi
