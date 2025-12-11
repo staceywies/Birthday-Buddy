@@ -18,9 +18,6 @@ using GitHub Actions like a pro,
 and clean, readable repo structure.
 
 🚀 Features
-
-Add new birthdays via a simple Python function
-
 Lookup birthdays from the stored list
 
 Automatically append entries to a log file
@@ -31,4 +28,4 @@ runs daily or on demand
 
 logs activity with timestamps
 
-commits updates back to the repo
+logs updates back to the repo
