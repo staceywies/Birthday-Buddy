@@ -8,10 +8,9 @@ on:
 permissions:
   contents: write
 
-
 jobs:
   send-reminders:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04  # Pinned (was ubuntu-latest, which moved to Ubuntu 26)
 
     steps:
       # 1️⃣ Checkout the repository
@@ -28,11 +27,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.x"
+          python-version: "3.12"  # Pinned (was "3.x")
 
       # 4️⃣ Install dependencies
       - name: Install dependencies
-        run: pip install requests python-dotenv
+        run: |
+          python --version
+          pip install requests python-dotenv
 
       # 5️⃣ Run birthday reminder script
       - name: Run reminder script
